@@ -1,3 +1,5 @@
 # authorea-github-tex-Reader
-Small and simple readerscript for Authorea on GitHub
-Up and running <live.offene-doktorarbeit.de>
+
+A Small and simple readerscript for Authorea-Files on GitHub
+
+Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
