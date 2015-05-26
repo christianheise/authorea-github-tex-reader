@@ -10,22 +10,22 @@
  */
 
 // Config
-$project = 'Offenes Promotionsvorhaben (Christian Heise)'; // Projektname
-$description = 'Eine praxistheoretische Studie zum Verständnis der Konzepte von Open Access und Open Science im Rahmen einer Differenzierung zwischen den verschiedenen wissenschaftlichen Disziplinen und vor dem Hintergrund wissenschaftlicher Reputation.'; // Beschreibung
-$mehrinfolink = 'http://offene-doktorarbeit.de/ueber/'; // more Infolink
-$kontakturl = 'http://offene-doktorarbeit.de'; // Contact URL
-$version = "Working Draft";  // Version of the Document
-$progress = '70'; // Progress of the Document
+$project = ''; // Projektname
+$description = ''; // Beschreibung
+$mehrinfolink = ''; // more Infolink
+$kontakturl = ''; // Contact URL
+$version = "";  // Version of the Document
+$progress = ''; // Progress of the Document
 $cache = 'true'; // Progress of the Document
 $cachetimeday = 300; // Progress of the Document in Seconds
 $cachetimenight = 1800; // Progress of the Document in Seconds
 
-$username = 'christianheise'; // GitHub User
-$repo = 'offene-doktorarbeit'; // GitHub Repository
-$ausername = '535'; // Authorea Username
-$aarticleid = '8964';  // Authorea Article ID
+$username = ''; // GitHub User
+$repo = ''; // GitHub Repository
+$ausername = ''; // Authorea Username
+$aarticleid = '';  // Authorea Article ID
 
-$piwikurl = 'http://piwik.med-network.de/piwik.php?idsite=38&amp;rec=1'; // Tracker Image
+$piwikurl = ''; // Tracker Image
 
 // Define $GET Variables
 if (isset($_GET['bib'])) { $bibtex = $_GET['bib']; }  else  { $bib=""; } 
@@ -133,7 +133,7 @@ echo "<!-- Cache not activated -->\n";
 // Footer including Tracker
 $footer='<div style="text-align:center; margin-left:10px; padding-top:0px; max-width:100%">&nbsp;<br><small><b>Daten:</b> Inhalt und Entstehungsprozess der Arbeit kann auf <a href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank">Authorea</a> und auf <a href="https://github.com/christianheise/'.$repo.'" target="_blank">GitHub</a> eingesehen werden.<br> 
 <b>Lizenz:</b> Der gesamte Inhalt steht unter <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.de" target="_blank">Creative Commons (CC BY-SA 3.0)</a>.
-<br><b>Reader-Version:</b> 0.'.date("Ym").' | <b>Quellcode(Reader):</b> Kommt bald | <a title="offene-doktorarbeit.de" target="_top" href="'.$kontakturl.'">Weitere Informationen & Kontakt</a><br>
+<br><b>Reader-Version:</b> 0.'.date("Ym").' | <b>Quellcode(Reader):</b> <a title="Code of this Reader" target="_blank" href="https://github.com/christianheise/authorea-github-tex-reader">hier</a> | <a title="offene-doktorarbeit.de" target="_top" href="'.$kontakturl.'">Weitere Informationen & Kontakt</a><br>
 </small><br>&nbsp;</div>
 <!-- Piwik Image Tracker-->
 <img src="'.$piwikurl.'&amp;action_name='.$nav.'&amp;url='.$current_url.'&amp;urlref='.$HREFERER.'" style="border:0" alt="" />
