@@ -16,9 +16,9 @@ $mehrinfolink = ''; // more Infolink
 $kontakturl = ''; // Contact URL
 $version = "";  // Version of the Document
 $progress = ''; // Progress of the Document
-$cache = 'true'; // Progress of the Document
-$cachetimeday = 300; // Progress of the Document in Seconds
-$cachetimenight = 1800; // Progress of the Document in Seconds
+$cache = 'true'; // Activate Cache?
+$cachetimeday = 300; // Cachingtime (day)
+$cachetimenight = 1800; // Cachingtime (night)
 
 $username = ''; // GitHub User
 $repo = ''; // GitHub Repository
