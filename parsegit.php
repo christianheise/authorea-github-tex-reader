@@ -16,6 +16,7 @@ $mehrinfolink = ''; // more Infolink
 $kontakturl = ''; // Contact URL
 $version = "";  // Version of the Document
 $progress = ''; // Progress of the Document
+$autor = ""; // Autorname
 $cache = 'false'; // Activate Cache?
 $cachetimeday = 300; // Cachingtime (day)
 $cachetimenight = 1800; // Cachingtime (night)
@@ -26,7 +27,6 @@ $ausername = ''; // Authorea Username
 $aarticleid = '';  // Authorea Article ID
 
 $piwikurl = ''; // Tracker Image
-
 // Define $GET Variables
 if (isset($_GET['bib'])) { $bibtex = $_GET['bib']; }  else  { $bib=""; } 
 if (isset($_GET['bibtex'])) { $bibtex = $_GET['bibtex']; }  else  { $bibtex=""; } 
@@ -134,11 +134,7 @@ echo "<!-- Cache not activated -->\n";
 $footer='<div style="text-align:center; margin-left:10px; padding-top:0px; max-width:100%">&nbsp;<br><small><b>Daten:</b> Inhalt und Entstehungsprozess der Arbeit kann auf <a href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank">Authorea</a> und auf <a href="https://github.com/christianheise/'.$repo.'" target="_blank">GitHub</a> eingesehen werden.<br> 
 <b>Lizenz:</b> Der gesamte Inhalt steht unter <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.de" target="_blank">Creative Commons (CC BY-SA 3.0)</a>.
 <br><b>Reader-Version:</b> 0.'.date("Ym").' | <b>Quellcode(Reader):</b> <a title="Code of this Reader" target="_blank" href="https://github.com/christianheise/authorea-github-tex-reader">hier</a> | <a title="offene-doktorarbeit.de" target="_top" href="'.$kontakturl.'">Weitere Informationen & Kontakt</a><br>
-</small><br>&nbsp;</div>
-<!-- Piwik Image Tracker-->
-<img src="'.$piwikurl.'&amp;action_name='.$nav.'&amp;url='.$current_url.'&amp;urlref='.$HREFERER.'" style="border:0" alt="" />
-<!-- End Piwik -->
-</body></html>';
+</small><br>&nbsp;</div>';
 
 $header='';
 
@@ -264,7 +260,7 @@ elseif($chapter!="")
     echo $title;
     echo '&nbsp;<span style="margin-top:5px" class="badge">&nbsp;Stand: ';
 	echo $stand;
-	echo '&nbsp;</span></h4></div></div>';
+	echo '&nbsp;</span></h4><small>'.$autor.'</small></div></div>';
 	echo '<div role="main" class="col-md-9" style="padding-top:5px;">';
  	echo '<ol class="breadcrumb">';
  	echo '<li><a href="/uebersicht">&Uuml;bersicht';
@@ -375,12 +371,12 @@ else
 	
 	// Aktuellen Stand ausgeben via letzten Commit
 	echo $stand;
-	echo '&nbsp;</span></h2>';
+	echo '&nbsp;</span></h2><small>'.$autor.'</small>';
 	echo '<p class="lead"><small>'.$description.' [<a href="'.$mehrinfolink.'" target="_top">mehr Informationen über dieses Vorhaben...</a>]</small></p></div>';
 	
 	// Ansichtoption und Links zu Github und Authorea
 	echo '<h4>Ansicht</h4>'; 
-	echo '<p style="padding-bottom:0px; padding-left:20px; line-height:40px;"><button style="margin-bottom:5px" type="button" class="btn btn-primary btn-xs active">Liveansicht (Working Draft';
+	echo '<p style="padding-bottom:0px; padding-left:20px; line-height:25px;"><button style="margin-bottom:5px" type="button" class="btn btn-primary btn-xs active">Liveansicht (Working Draft';
 	echo ')</button> <a style="margin-bottom:5px" href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" class="btn btn-default btn-xs">Orginaldokument auf Authorea</a> 
 	<a style="margin-bottom:5px" href="https://github.com/'.$username.'/'.$repo.'" class="btn btn-default btn-xs" target="_blank">Text und Daten auf GitHub</a>
 	</p>';
@@ -450,6 +446,11 @@ else
 // Footer laden
 echo $footer;
 
+echo '<!-- Piwik Image Tracker-->
+<img src="'.$piwikurl.'&amp;action_name='.$nav.'&amp;url='.$current_url.'&amp;urlref='.$HREFERER.'" style="border:0" alt="" />
+<!-- End Piwik -->
+</body></html>';
+
 // Cache Ende
 
 if($cache=="true")
@@ -462,6 +463,6 @@ if($cache=="true")
 	}
 else
 	{
-	echo "<!-- Cached deactivated -->\n";
+	echo "<!-- Cache deactivated -->\n";
 	}
 ?>
