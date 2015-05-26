@@ -16,7 +16,7 @@ $mehrinfolink = ''; // more Infolink
 $kontakturl = ''; // Contact URL
 $version = "";  // Version of the Document
 $progress = ''; // Progress of the Document
-$cache = 'true'; // Activate Cache?
+$cache = 'false'; // Activate Cache?
 $cachetimeday = 300; // Cachingtime (day)
 $cachetimenight = 1800; // Cachingtime (night)
 
@@ -41,7 +41,7 @@ $now = date('G');
 if($cache=="true")
 {
 
-// Tages- und Nachcaching 
+// Tages- und Nachtcaching 
 // TODO: als Funktion umsetzen und effizienter machen
 
 if ($now > 10 && $now < 23) 
