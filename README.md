@@ -4,4 +4,4 @@ A small and simple Reader (just a PHP script) for showing Authorea-Files (in LaT
 
 Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 
-Version: alpha 5.2015
+Version: alpha 0.201505
