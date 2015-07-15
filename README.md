@@ -5,3 +5,13 @@ A small and simple Reader (just a PHP script) for showing Authorea-Files (in LaT
 Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 
 Version: alpha 0.201505
+
+# Important
+For Permalinks you need a .htaccess containing the following Parameters:
+Options +FollowSymLinks
+RewriteEngine On
+Redirect 301 /backup.php http://live.offene-doktorarbeit.de/uebersicht
+RewriteRule ^chapter/([^.]*)[/]?$ parsegit.php?chapter=$1
+RewriteRule ^uebersicht parsegit.php
+RewriteRule ^literatur/all parsegit.php?bibtex=all
+RewriteRule ^quelle/([^.]*)[/]?$ /includes/bibtexbrowser.php?key=$1&bib=*URL-TO-BIBTEX-FILE*
