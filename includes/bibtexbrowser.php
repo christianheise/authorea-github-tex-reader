@@ -3946,7 +3946,7 @@ class Dispatcher {
       unset($_GET['library']);
       return;
     }
-	$_GET[Q_FILE]="https://raw.githubusercontent.com/christianheise/offene-doktorarbeit/master/bibliography/biblio.bib";
+	$_GET[Q_FILE]="";
     if (!isset($_GET[Q_FILE])) { die('$_GET[\''.Q_FILE.'\'] is not set!'); }
 
     // first we set the database (load from disk or parse the bibtex file)
