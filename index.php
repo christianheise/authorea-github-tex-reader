@@ -11,34 +11,36 @@
 
 // General Settings
 
-$project = 'Offenes Promotionsvorhaben'; // Projektname
-$description = 'Eine praxistheoretische Studie zum Verständnis der Konzepte von Open Access und Open Science im Rahmen einer Differenzierung zwischen den verschiedenen wissenschaftlichen Disziplinen und vor dem Hintergrund wissenschaftlicher Reputation.'; // Description for Homepage
-$mehrinfolink = 'http://offene-doktorarbeit.de/ueber/'; // more Infolink
-$moreinfolinktext ='mehr Informationen über dieses Vorhaben...';
-$kontakturl = 'http://offene-doktorarbeit.de'; // Contact URL
-$version = "Working Draft";  // Version of the Document
-$headtitle = 'offene-doktorarbeit.de'; // Title for Head
-$autor = "Autor: <em><a href='http://christianhei.se' target='_blank'>Christian Heise</a> (Leuphana Universität)</em>"; // Autorname
-$progress = '80'; // Progress of the Document
-$cache = 'false'; // Activate Cache
-$cachetimeday = 900; // Cachingtime in Sec (day)
-$cachetimenight = 1800; // Cachingtime Sec (night)
-$abweichung = 50; // variance for Pagecount
-$licencetext = '<b>Lizenz:</b> Der gesamte Inhalt steht unter <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.de" target="_blank">Creative Commons (CC BY-SA 3.0)</a>.'; // Licencetext in Footer
-$datatext = '<b>Daten:</b> Inhalt und Entstehungsprozess der Arbeit kann auf <a href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank">Authorea</a> und auf <a href="https://github.com/christianheise/'.$repo.'" target="_blank">GitHub</a> eingesehen werden.<br>'; // Data-Text in Footer
-$moreinfotext='Weitere Informationen & Kontakt';
-$notfound='<b>Fehler:</b> Dieses Kapitel existiert nicht.';
-$Badge = '<a href="http://dx.doi.org/10.5281/zenodo.19070" target="_blank"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.19070.svg" alt="10.5281/zenodo.19070"></a>';
-$DOI = '10.5281/zenodo.19070';
+$project = ''; // Projektname
+$description = ''; // Beschreibung
+$mehrinfolink = ''; // more Infolink
+$moreinfolinktext =''; // more Infolinktext
+$kontakturl = ''; // Contact URL
+$version = "";  // Version of the Document
+$headtitle = ''; // Title for Head
+$progress = ''; // Progress of the Document
+$autor = ""; // Autorname
+$cache = 'false'; // Activate Cache - false or true
+$cachetimeday = 300; // Cachingtime (day)
+$cachetimenight = 1800; // Cachingtime (night)
+$abweichung = 50; // expected variance for Pagecount because of figures and references
+$licencetext = ''; // Licencetext in Footer
+$moreinfotext=''; // Footer Text  for contact and imprint
+$notfound='<b>Error:</b> Not Found.'; // Not Found Text
+$DOI = ''; // Digital Object Identifier
+$Badge = ''; // Badges like zenodo DOI-Badge
 
-// Settings for Import
 
-$username = 'christianheise'; // GitHub User
-$repo = 'offene-doktorarbeit'; // GitHub Repository
-$ausername = '535'; // Authorea Username
-$aarticleid = '8964';  // Authorea Article ID
+// Settings for Import and Tracking
 
-$piwikurl = 'http://piwik.med-network.de/piwik.php?idsite=38&amp;rec=1'; // Tracker Image
+$username = ''; // GitHub User
+$repo = ''; // GitHub Repository
+$ausername = ''; // Authorea Username
+$aarticleid = '';  // Authorea Article ID
+$datatext = 'Data: <a href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank">Authorea</a> & <a href="https://github.com/christianheise/'.$repo.'" target="_blank">GitHub</a> eingesehen werden.<br>'; // Data-Text in Footer
+
+
+$piwikurl = ''; // Tracker Image
 
 // Language Settings
 
