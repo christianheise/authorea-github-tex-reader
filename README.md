@@ -7,10 +7,12 @@ Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 Version: alpha 0.201505
 
 # Important
-For Permalinks you need a .htaccess containing the following Parameters:
-* Options +FollowSymLinks
-* RewriteEngine On
-* RewriteRule ^chapter/([^.]*)[/]?$ parsegit.php?chapter=$1
-* RewriteRule ^uebersicht parsegit.php
-* RewriteRule ^literatur/all parsegit.php?bibtex=all
-* RewriteRule ^quelle/([^.]*)[/]?$ /includes/bibtexbrowser.php?key=$1&bib=*URL-TO-BIBTEX-FILE*
+The folders "cache" and "data" need to be writable by the webserver. For Permalinks you need a .htaccess containing the following Parameters:
+```
+Options +FollowSymLinks
+RewriteEngine On
+RewriteRule ^chapter/([^.]*)[/]?$ index.php?chapter=$1
+RewriteRule ^uebersicht index.php
+RewriteRule ^literatur/all index.php?bibtex=all
+RewriteRule ^quelle/([^.]*)[/]?$ /includes/bibtexbrowser.php?key=$1&bib=ADD-URL-TO-BIBTEX-FILE-HERE
+```
