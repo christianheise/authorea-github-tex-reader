@@ -9,7 +9,8 @@ Version: alpha 0.34
 # Installation Notes
 1. The folders "cache" and "data" need to be writable by the webserver. 
 2. Add the URL to your BibTeX file at `$_GET[Q_FILE]="URL-HERE";` in includes/bibtexbrowser.php (line 3949) 
-3. For Permalinks you need a .htaccess file containing the following parameters:
+3. Edit the `General Settings` and `Settings for Import` in index.php
+4. For Permalinks you need a .htaccess file containing the following parameters:
 ```
 Options +FollowSymLinks
 RewriteEngine On
