@@ -1,0 +1,155 @@
+
+ 
+@media only screen and (min-width: 481px) 
+	{
+
+		.articletools
+		{
+		position: fixed; 
+		background-color:#f68212; 
+		width:40px; 
+		height:110px; 
+		margin-top:35px; 
+		text-align:center;
+		}
+		.articletools a:hover
+		{
+		color:#ffffff;
+		}
+		.articletools a:visited
+		{
+		color:#000000;
+		text-decoration:none;
+		}
+		.articlefont1
+		{
+		font-size: 13px; color:#ffffff;
+		}
+		.articlefont2
+		{
+		font-size: 15px; color:#ffffff;
+		}
+		.articlefont3
+		{
+		font-size: 18px; color:#ffffff;
+		}
+		img.toparrow
+		{
+		height:30px;
+		width:30px;
+		}
+		img.home
+		{
+		height:30px;
+		width:30px;
+		}
+		.fontsizemob
+		{
+		display:none;
+		}
+
+	} 
+
+@media only screen and (max-width: 480px)
+	{
+		.articletools
+		{
+		position: fixed; 
+		background-color:#f68212; 
+		width:28px; 
+		height:132px; 
+		margin-top:35px;
+		text-align:center;
+		line-height: 18px;
+		right:0px;
+		}
+		.articletools a:hover
+		{
+		color:#ffffff;
+		}
+		.articletools a:active
+		{
+		color:#000000;
+		text-decoration:none;
+		}
+		.articlefont1
+		{
+		font-size: 12px !important; 
+		color:#ffffff;
+		line-height: 14px;
+
+		font-weight:bold;
+		}
+		.articlefont2
+		{
+		font-size: 18px !important; 
+		color:#ffffff;
+		line-height: 24px;
+
+		font-weight:bold;
+		}
+		.articlefont3
+		{
+		font-size: 24px !important; 
+		color:#ffffff;
+		line-height: 24px;
+	
+		font-weight:bold;
+		}
+		img.toparrow
+		{
+		height:16px;
+		width:16px;
+		}
+		img.home
+		{
+		height:18px;
+		width:18px;
+		}
+		.articletools a:hover
+		{
+		color:#ffffff;
+		text-decoration:none;
+		}
+		html body div.container div.col-md-3
+		{
+		display:none !important;
+		}
+		html body div.container div.col-md-9 div h2
+		{
+		font-size:18px !important;
+		}
+		html body div.container div.col-md-9 div h3
+		{
+		font-size:16px !important;
+		}
+		html body div.container div.col-md-9 div h1
+		{
+		font-size:20px !important;
+		}
+		html body div.container div.col-md-9 h1.page-header
+		{
+		font-size:20px !important;
+		}
+		.fontsizedesk
+		{
+		display:none;
+		}
+	}
+
+.header-div {
+background-color: #f0f0f0; 
+height: 40px;
+background-image:-moz-linear-gradient(center top , #ffffff, #f0f0f0);
+}
+
+.header-logo {
+margin-left:20px; 
+padding-top:5px; 
+vertical-align:middle;
+}
+
+html body div.container div.col-md-9 div p
+{
+text-align: block;
+}

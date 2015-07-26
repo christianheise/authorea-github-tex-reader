@@ -96,3 +96,4 @@ legend { margin: 0; padding: 0 2px 5px; vertical-align: middle; font-weight: bol
 .test-data tr.subhead th { border-bottom: 1px solid #b1c1f9; background: #e8f4fe url('../img/common/th-na-bg.gif') 0 0 repeat-x; }
 .test-data th.alt { border-top: 1px solid #b1c1f9; border-bottom: 1px solid #b1c1f9; color: #000; background-color: #dbebff; }
 .test-data tr.alt { background-color: #ebf4ff; }
+.headcontainer { background-color: #f0f0f0; height: 40px; }
