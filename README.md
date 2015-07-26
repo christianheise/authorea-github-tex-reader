@@ -6,8 +6,10 @@ Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 
 Version: alpha 0.34
 
-# Important
-The folders "cache" and "data" need to be writable by the webserver. For Permalinks you need a .htaccess containing the following Parameters:
+# Installation Notes
+1. The folders "cache" and "data" need to be writable by the webserver. 
+2. Add the URL to your BibTeX file at `$_GET[Q_FILE]="URL-HERE";` in includes/bibtexbrowser.php (line 3949) 
+3. For Permalinks you need a .htaccess file containing the following parameters:
 ```
 Options +FollowSymLinks
 RewriteEngine On
