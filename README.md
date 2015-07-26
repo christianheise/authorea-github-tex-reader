@@ -4,7 +4,7 @@ A small and simple Reader (just a PHP script) for showing Authorea-Files (in LaT
 
 Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 
-Version: alpha 0.201505
+Version: alpha 0.34
 
 # Important
 The folders "cache" and "data" need to be writable by the webserver. For Permalinks you need a .htaccess containing the following Parameters:
