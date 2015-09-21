@@ -12,35 +12,39 @@
 // General Settings
 
 $project = ''; // Projektname
-$description = ''; // Beschreibung
+$description = ''; // Description for Homepage
+$helptextindex = ''; // short Description
 $mehrinfolink = ''; // more Infolink
-$moreinfolinktext =''; // more Infolinktext
+$graphschartslink = ''; // more Graphs and Charts Link
+$moreinfolinktext ='';
 $kontakturl = ''; // Contact URL
+$chartserver = ''; // URL used by Datawrapper Charts
+$graphpngs = ''; // URL used Datawrapper PNGs
 $version = "";  // Version of the Document
 $headtitle = ''; // Title for Head
-$progress = ''; // Progress of the Document
 $autor = ""; // Autorname
-$cache = 'false'; // Activate Cache - false or true
-$cachetimeday = 300; // Cachingtime (day)
-$cachetimenight = 1800; // Cachingtime (night)
-$abweichung = 50; // expected variance for Pagecount because of figures and references
+$progress = ''; // Progress of the Document
+$cache = 'false'; // Activate Cache; Option: true/false
+$cachetimeday = 900; // Cachingtime in Sec (day)
+$cachetimenight = 1800; // Cachingtime Sec (night)
+$abweichung = 20; // variance for Pagecount
 $licencetext = ''; // Licencetext in Footer
-$moreinfotext=''; // Footer Text  for contact and imprint
-$notfound='<b>Error:</b> Not Found.'; // Not Found Text
-$DOI = ''; // Digital Object Identifier
-$Badge = ''; // Badges like zenodo DOI-Badge
+$moreinfotext='';
+$notfound='';
+$Badge = '';
+$DOI = '';
+$timezone = ''; // Timezone
+$accesstoken = ''; // github Access Token to increase Rate Limit
 
-
-// Settings for Import and Tracking
+// Settings for Import
 
 $username = ''; // GitHub User
 $repo = ''; // GitHub Repository
 $ausername = ''; // Authorea Username
 $aarticleid = '';  // Authorea Article ID
-$datatext = 'Data: <a href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank">Authorea</a> & <a href="https://github.com/christianheise/'.$repo.'" target="_blank">GitHub</a> eingesehen werden.<br>'; // Data-Text in Footer
+$datatext = ''; // Data-Text in Footer
 
-
-$piwikurl = ''; // Tracker Image
+$piwikurl = 'o'; // Tracker Image
 
 // Language Settings
 
@@ -51,11 +55,11 @@ $langpages = "Seiten"; // Pages
 $langstill = "noch"; // still
 $langvoll = "Komplettansicht"; // full view text
 $langchap = "Kapitel"; // chapter
-$langchoosechap = "Kapitel auswählen"; // chapter
+$langchoosechap = "Kapitel anzeigen"; // chapter
 $langtoc = "Inhaltsverzeichnis"; // TOC
 $langreferences = "Literaturverzeichnis"; // bibliographical references
 $langlinkmain = "Übersicht"; // Linktext Breadcrumblink to Mainpage
-$langsdata = "Daten"; // Data
+$langdata = "Daten"; // Data
 $langfigs = "Abbildungen"; // Figures
 $langrefs = "Literatur" ; // Literature
 $langshowrefs = "Literatur anzeigen"; //show Literature
@@ -67,12 +71,13 @@ $langview = "Ansicht"; // Viewmodus
 $langtext = "Text"; // Text
 $langlastchagnes = "Letzte 5 Änderungen"; // last changes
 $langat = "am"; // Lastchanges Date "at"
+$langallcommits ="Alle Änderungen anzeigen"; // all commits
 
 
 // Start Code Github Authorea LaTex-Reader
 // Just edit below if you know what you are doing
 
-$rversion="0.34-alpha";
+$rversion="0.36-alpha";
 
 // Define $GET Variables
 if (isset($_GET['bib'])) { $bibtex = $_GET['bib']; }  else  { $bib=""; } 
@@ -84,16 +89,6 @@ $current_url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 date_default_timezone_set("Germany/Berlin");
 $now = date('G');
 
-
-// Head
-
-$htmlhead ='<div id="top" class="header-div">
-				<div class="header-logo">
-					<img style="height: 30px !important;" src="../../img/oa.png">
-					&nbsp;<span style="color: #f68212;font-weight: bold;">
-					<a style="color: #f68212;" href="'.$kontakturl.'">'.$headtitle.'</a></font></span>
-				</div>
-			</div>';
 
 // Functions
 
@@ -171,13 +166,26 @@ $htmlhead ='<div id="top" class="header-div">
 	$break  = $_SERVER['PHP_SELF'];
 	$file = str_replace("/", "", $break);
 	// Cache in Verzeichniss ablegen
-	$cachefile = 'cache/cached-'.$chapter.''.$bibtex.'-'.substr_replace($file ,"",-4).'.html';
+	
+			if ($chapter=="" and $bibtex=="")
+			{
+    		$na = "index";
+    		}
+			elseif ($bibtex=="all")
+			{
+    		$na = "bibtex";
+    		}
+			else
+    		{
+    		}
+    		
+	$cachefile = 'cache/cached-'.$chapter.''.$na.'.html';
 	// Serve from the cache if it is younger than $cachetime
 	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
     // Cache Debug-Ausgabe
     echo "<!-- Cached copy, generated ";
     $timestamp = filemtime($cachefile);
-	$timestamp_later = $timestamp + 7200;
+	$timestamp_later = $timestamp + $timezone;
 	$newftime=strftime('%H:%M', $timestamp_later);
 	echo "".$newftime." Cachetime (".$cmodus."-modus): ".$cachetime." -->\n";
     include($cachefile);
@@ -196,7 +204,7 @@ $htmlhead ='<div id="top" class="header-div">
 
 	// get latest Commits and Status of work
 	// TODO: als Funktion umsetzen und effizienter machen
-	$url = 'https://api.github.com/repos/'.$username.'/'.$repo.'/commits?page=1&per_page=5';
+	$url = 'https://api.github.com/repos/'.$username.'/'.$repo.'/commits?page=1&per_page=5&access_token='.$accesstoken.'';
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	//GitHub API request require a user agent, GitStatus uses Chrome UA
@@ -217,15 +225,15 @@ $htmlhead ='<div id="top" class="header-div">
 			$time = date("H:i", strtotime($date));
 			$timestamp = strtotime($time);
 			$timestampplus2 = $timestamp + 7200;
-			$newDate = date('d.m.y', strtotime($date . ' + 2 hours'));
-			$newDatedetail = date('H:i', strtotime($date . ' + 2 hours'));
+			$newDate = date('d.m.y', strtotime($date . ' '.$timezone.''));
+			$newDatedetail = date('H:i', strtotime($date . ' '.$timezone.''));
 			$houtput .=  ' '.$newDate.'';	
 			$houtput .=  '</li>';
 			$ccount = $ccount+1;
 			// get Stand der Arbeit
 			if($ccount==1)
 			{
-			$stand="".$newDate." um ".$newDatedetail."";
+			$stand="".$newDate." ".$newDatedetail."";
 			}		
 		}
 
@@ -238,11 +246,42 @@ $htmlhead ='<div id="top" class="header-div">
 	{ 
 	$HREFERER="";
 	}
+	
+// Head
+
+$htmlhead ='<div class="header-div" style="box-shadow: 0 7px 10px #f0f0f0">
+		
+<div class="topstatus">
+<div class="statusprogress progress">
+  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'.$progress.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$progress.'%">
+    <span>'.$progress.'%</span>
+  </div>
+</div>
+<span class="statusbar label label-default"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> '.$stand.'
+</span> <span class="statusbar label ';
+
+	if($version=="Working Draft")
+	{
+	$htmlhead .= 'label-danger';
+	}
+	else
+	{
+	$htmlhead .= 'label-success';
+	}
+
+$htmlhead .='"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> '.$version.'!</span></div>
+				<div class="header-logo">
+					<img class="toplogo" src="../../img/oa.png"><span class="logotext" style="color: #f68212;font-weight: bold;">
+					<a style="color: #f68212;" href="../../../">'.$headtitle.'</a></font></span>
+				</div>
+			</div>';
+			
+			
 
 // Footer including Tracker
-$footer='<div style="text-align:center; margin-left:10px; padding-top:0px; max-width:100%">&nbsp;<br><small>'.$datatext.' '.$licencetext.'
+$footer='<footer role="contentinfo" style="border-top: 1px solid #e5e5e5"><div style="text-align:center; padding-top:0px; max-width:96%; margin:auto;">&nbsp;<br><small>'.$datatext.' '.$licencetext.'
 <br><b>Reader-Version:</b> '.$rversion.' | <a title="Code of this Reader" target="_blank" href="https://github.com/christianheise/authorea-github-tex-reader">Source Code (Reader)</a> | <a title="'.$kontakturl.'" target="_top" href="'.$kontakturl.'">'.$moreinfotext.'</a><br>
-</small><br>&nbsp;</div>';
+</small></div></footer>';
 
 $header='';
 
@@ -277,12 +316,12 @@ if ($bibtex=="all")
 	}
 	</style>
 	</head>
-	<body>';
+	<body id="top">';
 	echo $htmlhead;
 	
 	// Container Anfang
 	echo '<div class="container" style="padding-top:40px;">
-	<div role="main" class="col-md-9"><ol class="breadcrumb"><li><a href="/uebersicht">'.$langlinkmain.'</a></li><li class="active">'.$langreferences.'</li>
+	<div role="main" class="col-md-9" style="padding-top:40px;"><ol class="breadcrumb"><li><a href="/uebersicht">'.$langlinkmain.'</a></li><li class="active">'.$langreferences.'</li>
 	</ol><h1 class="page-header">'.$langreferences.' <small>(<a href="https://raw.githubusercontent.com/'.$username.'/'.$repo.'/master/bibliography/biblio.bib" target="_blank">BibTeX '.$langshow.'</a>)</small></h1>';
 	
 	// Definiere Variablen für die Bibtexeinbindung
@@ -296,15 +335,13 @@ if ($bibtex=="all")
 	echo '</div>';
 
 	// Navigation rechte Seite in Modul 1
-  	echo '<div role="complementary" class="col-md-3">
-        <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
-        <ul class="nav bs-docs-sidenav"><li>';
+  	echo '<div role="complementary" class="col-md-3" style="padding-top:30px;">
+        <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">';
+ 	echo '<label>'.$langchoosechap .'</label><div class="list-group">';
     
     // .tex Dateien aus Layout für Naviagation laden
     $opt_words = file_get_contents('https://raw.githubusercontent.com/'.$username.'/'.$repo.'/master/layout.md');
 	$pattern = explode('.tex', $opt_words);
-
- 	echo '<label>'.$langchoosechap.'</label><div class="list-group">';
 	
 	// für jedes Element ein Button
 	foreach ($pattern as $value) 
@@ -325,11 +362,13 @@ if ($bibtex=="all")
 		}
 	
 	// Links unter dem Inhaltsverzeichnis
-	echo '</div><label>'.$langrefs.' & '.$langdata.'</label><div class="list-group">';
- 	echo '<a href="/literature/all" class="list-group-item active"> <h5 class="list-group-item-heading">'.$langrefs.' '.$langshow.'</h5></a>'; 
-  	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" class="list-group-item" target="_blank"> <h5 class="list-group-item-heading">'.$langdata.' '.$langshow.'</h5></a>'; 
- 	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/images" class="list-group-item" target="_blank"> <h5 class="list-group-item-heading">'.$langfigs.' '.$langshow.'</h5></a>'; 
- 	echo '</li></ul></nav></div>';
+ 	echo '</div><label>'.$langrefs.' / '.$langdata.'</label><div class="list-group">';
+	echo '<a href="/literature/all#top" class="list-group-item active"> <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> '.$langshowrefs.'</h5></a>'; 
+  	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" class="list-group-item" target="_blank"> 
+  	<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> '.$langshowdata.'</h5></a>
+  	<a href="'.$graphschartslink.'" class="list-group-item" target="_blank"> <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> '.$langshowfigs.'</h5></a>
+ 	</div></div>'; 
+    
     
     // Navigation rechte Seite Ende + Container Ende
     echo '</div>';
@@ -437,7 +476,7 @@ elseif($chapter!="")
 	list-style-type: none;
 	}
 	</style>
-	</head><body>';
+	</head><body id="top">';
 	echo $htmlhead;
 
  	// Container for Chapter
@@ -471,24 +510,18 @@ elseif($chapter!="")
 	echo '</div>';
  	
  	
- 	echo '<div class="container" style="padding-top:20px;">';
+ 	echo '<div class="container" style="padding-top:55px;">';
  	// Titel der Arbeit aus Repo auslesen
  	$title = file_get_contents('https://raw.githubusercontent.com/'.$username.'/'.$repo.'/master/title.md');
  	
-	echo '<div role="main" class="col-md-9" style="padding-top:0px; word-wrap: break-word;">';
-	echo '<div tabindex="-1" id="content" class="bs-docs-header" style="padding-bottom:10px;">
-    <div class="container" style="width:100%;" >';
-    echo '<h4><small>'.$project.'</small><br>';
-    echo $title;
-    echo '&nbsp;<span style="margin-top:5px" class="badge">&nbsp;Stand: ';
-	echo $stand;
-	echo '&nbsp;</span></h4><small>'.$autor.'</small></div></div>';
+	echo '<div role="main" class="col-md-9" style="padding-top:20px; word-wrap: break-word;">';
+	
  	
  
 	// Inhalt für jeweiliges $chapter aus Github auslesen
 	if($chapter!="all")
 	{
-	echo '<ol class="breadcrumb">';
+	echo '<ol class="breadcrumb" style="">';
  	echo '<li><a href="/uebersicht">'.$langlinkmain.'';
   	echo '</a></li><li class="active">'.$chapter.'</li></ol>';
  
@@ -508,7 +541,7 @@ elseif($chapter!="")
 	// gesamten Text anzeigen
 	else
 	{
-	echo '<ol class="breadcrumb">';
+	echo '<ol class="breadcrumb" style="display:none;">';
  	echo '<li><a href="/uebersicht">'.$langlinkmain.'';
   	echo '</a></li><li class="active">'.$langvoll.'</li></ol>';
 	
@@ -523,13 +556,19 @@ elseif($chapter!="")
  		$content .= file_get_contents('data/'.$trimmed.'-data.txt');
 
 		}
-
+	} 
 	
-	}
+	echo '<div tabindex="-1" id="content" class="bs-docs-header" style="padding-bottom:0px;">';
+    echo '<div style="width:100%;" >';
+    echo '<h4><small>'.$project.'</small><br>';
+    echo $title;
+    echo '</h4>';
+	echo '<small>'.$autor.'</small></div></div>';
  
 	// Konvertierung von LaTex
 	// TODO: als Funktion umsetzen und effizienter machen
     $todocount = substr_count($content, '---- TODO:');
+    $figcount = substr_count($content, 'begin{figure}');
  	$content = preg_replace('~\\---- TODO: (.*) ----~', '<p class="bg-warning" style="padding-left:10px; padding-right: 5px; font-style: italic; font-size:120%;"><br><b>Todo:</b> $1<br>&nbsp;</p>', $content);
  	$content = preg_replace('~\\\textbf{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<strong>$1</strong>', $content);
  	$content = preg_replace('~\\\textit{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<em>$1</em>', $content);
@@ -540,11 +579,21 @@ elseif($chapter!="")
  	$content = preg_replace('~\\\begin{itemize}~', '<ul>', $content);
  	$content = preg_replace('~\\\end{itemize}~', '</ul>', $content);
 	$content = preg_replace('~\\\begin{enumerate}~', '<ol>', $content);
- 	$content = preg_replace('~\\\end{enumerate}~', '</ol>', $content);
- 	$content = preg_replace('~\\\item~', '</li><li>', $content);
+ 	$content = preg_replace('~\\\end{enumerate}~', '</ol>', $content); 
+	$content = preg_replace('~\\\item~', '</li><li>', $content);
  	$content = preg_replace('~\\\chapter{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '', $content);
  	$content = preg_replace('~\\\section{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<h2>$1</h2>', $content);
- 	$content = preg_replace('~\\\subsection{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<h3>$1</h3>', $content);
+ 	$content = preg_replace('~\\\begin{figure}\[(.*)]~', '', $content);
+ 	$content = preg_replace('~\\\includegraphics{smalltableid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="ifsmalltable" src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="400px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-lanscapesmall.png" ></a></div>', $content);
+ 	$content = preg_replace('~\\\includegraphics{tableid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="iftable"  src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="600px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-landscape.png"></a></div>', $content);
+ 	$content = preg_replace('~\\\includegraphics{largetableid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="iftable"  src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="800px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-landscape.png"></a></div>', $content);
+  	$content = preg_replace('~\\\includegraphics{smallgraphid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="ifgraph" src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="300px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-lanscapesmall.png"></a></div>', $content);
+ 	$content = preg_replace('~\\\includegraphics{graphid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="ifgraph" src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="400px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-landscape.png"></a></div>', $content);
+ 	$content = preg_replace('~\\\includegraphics{largegraphid:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<iframe class="ifgraph" src="'.$chartserver.'/$1/" frameborder="0"  allowtransparency="true"  allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen" height="600px" width="100%" style="border: 1px #f68212 solid; padding: 10px;"></iframe><div class="mobfallback"><a href="'.$chartserver.'/$1/" target="_blank"><img src="'.$graphpngs.'/$1-landscape.png"></a></div>', $content);
+ 	$content = preg_replace('~\\\includegraphics{url:([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<img src="/$1/" width="100%" height="400" style="border: 1px #f68212 solid; padding: 10px;">', $content);
+ 	$content = preg_replace('~\\\end{figure}~', '', $content);
+ 	$content = preg_replace('~\\\caption{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<p style="margin-top:-8px;"><b>Abbildung:</b> <em>$1</em> <span class="mobfallback">(für Vergrößerung auf Bild klicken)</span></p>', $content);
+	$content = preg_replace('~\\\subsection{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<h3>$1</h3>', $content);
  	$content = preg_replace('~\\\subsubsection{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '<h4>$1</h4>', $content);
  	$content = preg_replace('~\\\href{([^{}]*(?:{(?1)}[^{}]*)*+)}{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '', $content);
  	$content = preg_replace('~\\{http://([^{}]*(?:{(?1)}[^{}]*)*+)</a>}~', '<a href="http://$1" target="_blank">$1</a>', $content);
@@ -553,6 +602,7 @@ elseif($chapter!="")
  	$content = preg_replace('~\\\cite{([^{}]*(?:{(?1)}[^{}]*)*+)}~', '&#91;<a href="/quelle/$1">$1</a>&#93;', $content);
 	
 	$word = str_word_count(strip_tags($content));
+	$charcount = strlen(strip_tags($content));
 	
 
 	if($chapter!="all")
@@ -566,6 +616,11 @@ elseif($chapter!="")
 	$todocounttxt = $todocount;
 	fwrite($myfile3, $todocounttxt);
 	fclose($myfile3);
+	
+	$myfile4 = fopen("data/".$chapter."-figures.txt", "w") or die("Unable to open file - Check Permissions for Data-Folder!");
+	$figcounttxt = $figcount;
+	fwrite($myfile4, $figcounttxt);
+	fclose($myfile4);
 
 	$myfile2 = fopen("data/".$chapter."-data.txt", "w") or die("Unable to open file - Check Permissions for Data-Folder!");
 	$txt2 = "<h1 class='page-header' style='padding-top:0px;'>".$langchap.": ".$chapter."</h1>";
@@ -600,7 +655,7 @@ elseif($chapter!="")
  	echo '</div>';
 	
 	// Navigation rechte Seite
-	echo '<div role="complementary" class="col-md-3"><nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">';
+	echo '<div role="complementary" class="col-md-3"  style="padding-top:15px"><nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">';
     $opt_words = file_get_contents('https://raw.githubusercontent.com/'.$username.'/'.$repo.'/master/layout.md');
 	$pattern = explode('.tex', $opt_words);
  	echo '<label>'.$langchoosechap .'</label><div class="list-group">';
@@ -626,12 +681,16 @@ elseif($chapter!="")
  		echo '</a>'; 
   			}
 		}
-  	echo '</div><label>'.$langrefs.' / '.$langsdata.'</label><div class="list-group">';
-	echo '<a href="/literature/all#top" class="list-group-item"> <h5 class="list-group-item-heading">'.$langshowrefs.'</h5></a>'; 
+		
+	// Navigation Lesemodus Abbildungen und Daten
+  	echo '</div><label>'.$langrefs.' / '.$langdata.'</label><div class="list-group">';
+	echo '<a href="/literature/all#top" class="list-group-item"> <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> '.$langshowrefs.'</h5></a>'; 
   	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" class="list-group-item" target="_blank"> 
-  	<h5 class="list-group-item-heading">'.$langshowdata.'</h5></a>
-  	<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/images" class="list-group-item" target="_blank"> <h5 class="list-group-item-heading">'.$langshowfigs.'</h5></a>
+  	<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> '.$langshowdata.'</h5></a>
+  	<a href="'.$graphschartslink.'" class="list-group-item" target="_blank"> <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> '.$langshowfigs.'</h5></a>
  	</div>'; 
+ 	
+ 	
  	
 	
     echo '</nav></div>';
@@ -665,10 +724,10 @@ else
 	</head>
 	<body>';
 	echo $htmlhead;
-	echo '<div class="container" style="padding-top:0px;">
-	<div style="padding-bottom:0px;">';
+	echo '<div class="container" style="padding-top:25px;">
+	<div style="padding-bottom:0px; padding-top:35px;">';
 
-	// Dokument nicht Verfügbar
+	// Document not found TODO: make non-Cachable
 	if($note=="NotFound")
 	{
 	echo '<br><br><div class="alert alert-danger" role="alert">'.$notfound.'</div>';
@@ -677,35 +736,14 @@ else
 	{
 	}
 
-	echo '<h2 style="font-size:26px;"><small style="font-size:14px; line-height:25px;">'.$project.'</small><br>'.$title.'';
-	echo '';
-	echo '&nbsp;<span style="margin-top:5px" class="badge">&nbsp;'.$langstatus.': ';
-	
-	// Aktuellen Stand ausgeben via letzten Commit
-	echo $stand;
-	echo '&nbsp;</span></h2><small>'.$autor.'</small>';	
-	echo '<p class="lead"><small>'.$description.' [<a href="'.$mehrinfolink.'" target="_top">'.$moreinfolinktext.'</a>]</small></p></div>';
+	echo '<div class="panel panel-default">
+  		<div class="panel-body">
+    	<small>'.$project.' | '.$autor.'</small><h2 style="font-size:26px; margin-top:0px;">'.$title.'</h2>'.$description.'</div>
+  		<div class="panel-footer">'.$helptextindex.' <a target="_blank" href="'.$mehrinfolink.'">'.$moreinfolinktext.'</a></div>
+		</div>
+		</div>';
 	
 	
-	// Ansichtoption und Links zu Github und Authorea
-	echo '<h4>'.$langview .'</h4>'; 
-	echo '<p style="padding-bottom:0px; padding-left:20px; line-height:25px;"><button style="margin-bottom:5px" type="button" class="btn btn-primary btn-xs active">Live ('.$version.'';
-	echo ')</button> <a style="margin-bottom:5px" href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank" class="btn btn-default btn-xs">'.$langtext.' @ Authorea</a> 
-	<a style="margin-bottom:5px" href="https://github.com/'.$username.'/'.$repo.'" class="btn btn-default btn-xs" target="_blank">'.$langtext.' & '.$langsdata.' @ GitHub</a> 
-	</p>';
-	
-	
-	// DOI und Altmetrics
-	if($Badge!="" or $DOI!="")
-	{
-	echo "<script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>";
-	echo '<h4>DOI / Altmetrics <small>Status: '.$version.'</small></h4>'; 
-	echo '<p style="float:left; padding-bottom:0px; margin-right:5px; padding-left:20px; line-height:25px;">'.$Badge.'
-	</p><div style="padding-bottom:0px; padding-top:0px; padding-left:20px; line-height:25px; data-badge-details="right" data-badge-type="1" data-doi="'.$DOI.'" class="altmetric-embed"></div>';
-	}
-	else
-	{ 
-	}
 	
 	// Naviagion auf Main
 	// TODO: als Funktion umsetzen und effizienter machen
@@ -726,13 +764,19 @@ else
  			$n=$n+1;
 			
 			
-			$myfile = fopen("data/".$trimmed."-todo.txt", "r") or die("Unable to create Todos - check permissions of Data Folder!");
+			$myfile = fopen("data/".$trimmed."-todo.txt", "r") or die("Unable to create Todoscount - Open all chapters one by one or check permissions of Data Folder!");
 			$todocount = fgets($myfile); 
 			fwrite($myfile, $todocount);
 			fclose($myfile);
 			$countalltodo=$countalltodo+$todocount;
 			
-			$myfile = fopen("data/".$trimmed.".txt", "r") or die("Unable to create Counter - check permissions of Data Folder!");
+			$myfile = fopen("data/".$trimmed."-figures.txt", "r") or die("Unable to create Figuresscount - Open all chapters one by one or check permissions of Data Folder!");
+			$figcount = fgets($myfile); 
+			fwrite($myfile, $todocount);
+			fclose($myfile);
+			$countallfigs=$countallfigs+$figcount;
+			
+			$myfile = fopen("data/".$trimmed.".txt", "r") or die("Unable to create Text-Counter - Open all chapters one by one or check permissions of Data Folder!");
 			$count = fgets($myfile); 
 			fwrite($myfile, $count);
 			fclose($myfile);
@@ -744,17 +788,42 @@ else
  		}
 	echo '</div>';
 	echo '<div class="btn-toolbar" style="padding-left:20px;" role="toolbar">';
-	echo '<a href="/chapter/all#top" style="padding-top:5px;margin-bottom:5px;" class="btn btn-default btn-sm" role="button">'.$langvoll.'</a>';
- 	echo '</div>';		
+	echo '<a href="/chapter/all#top" style="padding-top:5px;margin-bottom:5px;" class="btn btn-default btn-sm" role="button"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span> '.$langvoll.'</a>';
+ 	echo '</div>';	
+ 	
+ 	
+ 	// Literatur und Daten Links	
 
-	echo '<h4>'.$langrefs.' / '.$langsdata.'</h4>'; 
+	echo '<h4>'.$langrefs.' / '.$langdata.'</h4>'; 
 	echo '<div class="btn-toolbar" style="padding-left:20px;" role="toolbar">';
-	echo '<a href="/literature/all#top" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button">'.$langshowrefs.'</a>';
-	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" target="_blank" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button">'.$langshowdata.'</a>';
-	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" target="_blank" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button">'.$langshowfigs.'</a>';
+	echo '<a href="/literature/all#top" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> '.$langshowrefs.'</a>';
+	echo '<a href="https://github.com/'.$username.'/'.$repo.'/tree/master/data" target="_blank" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> '.$langshowdata.'</a>';
+	echo '<a href="'.$graphschartslink.'" target="_blank" style="margin-bottom:5px;" class="btn btn-default btn-sm" role="button"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> '.$langshowfigs.'</a>';
 	echo '</div>';
-
 	
+	// Status
+	
+	echo '<h4>Status</h4>'; 
+	echo '<div style="padding-left:20px;">';
+	?>
+	<p><b>Version:</b> <?php echo $version; ?><br><b><?php echo $langstatus; ?>:</b> <?php echo $stand; ?><br><b><?php echo $langextent; ?>:</b> <?php echo $countall; ?> <?php echo $langwords; ?> / <?php  
+	$seiten=$countall/250; 
+	echo round($seiten+$abweichung); 
+	echo " ".$langpages."";
+	?><br> <b><?php echo $langfigs; ?>:</b> <?php echo $countallfigs; ?></p>
+	<div class="progress">
+  	<div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%;">
+    <?php echo $progress; ?>%  (<?php 
+    echo "".$langstill." ";
+    echo $countalltodo;
+    echo " ".$langtodos.""; 
+    ?>)
+  	</div>
+</div></div>
+
+	<?php
+	
+		
 	// Commits von "get latest Commits and Status of work" anzeigen
 	
 	if($ccount>3)
@@ -763,33 +832,33 @@ else
 	echo "<ul>";
 	echo $houtput; 
 	echo "</ul>";
+	echo '<a style="margin-left:20px;" class="btn btn-default btn-xs" target="_blank" href="https://github.com/'.$username.'/'.$repo.'/commits/master"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> '.$langallcommits.'</a>';
 	}
 	
 	else
 	{	
 	}
 	
-	// Status
+	// DOI und Altmetrics
+	if($Badge!="" or $DOI!="")
+	{
+	echo "<script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>";
+	echo '<h4 style="padding-top:10px;">DOI / Altmetrics <small>Status: '.$version.'</small></h4>'; 
+	echo '<p style="float:left; padding-bottom:0px; margin-right:5px; padding-left:20px; line-height:25px;">'.$Badge.'
+	</p><div style="padding-bottom:0px; padding-top:0px; padding-left:20px; line-height:25px; data-badge-details="right" data-badge-type="1" data-doi="'.$DOI.'" class="altmetric-embed"></div>';
+	}
+	else
+	{ 
+	}
 	
-	echo '<h4>Status</h4>'; 
-	echo '<div style="padding-left:20px;">';
-	?>
-	<p><b>Version:</b> <?php echo $version; ?><br><b><?php echo $langstatus; ?>:</b> <?php echo $stand; ?><br><b><?php echo $langextent; ?>:</b> <?php echo $countall; ?> <?php echo $langwords; ?> / <?php  
-	$seiten=$countall/315; 
-	echo round($seiten+$abweichung); 
-	echo " ".$langpages."";
-	?></p>
-	<div class="progress">
-  	<div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%;">
-    <?php echo $progress; ?>%  (<?php 
-    echo $langstill;
-    echo $countalltodo;
-    echo " ".$langtodos.""; 
-    ?> )
-  	</div>
-	</div>
-
-	<?php
+	
+	// Ansichtoption und Links zu Github und Authorea
+	echo '<h4 style="padding-top:10px;">'.$langview .'</h4>'; 
+	echo '<p style="padding-bottom:20px; padding-left:20px; line-height:25px;"><button style="margin-bottom:5px" type="button" class="btn btn-primary btn-xs active">Live ('.$version.'';
+	echo ')</button> <a style="margin-bottom:5px" href="https://www.authorea.com/users/'.$ausername.'/articles/'.$aarticleid.'/_show_article" target="_blank" class="btn btn-default btn-xs">'.$langtext.' @ Authorea</a> 
+	<a style="margin-bottom:5px" href="https://github.com/'.$username.'/'.$repo.'" class="btn btn-default btn-xs" target="_blank">'.$langtext.' & '.$langdata.' @ GitHub</a> 
+	</p>';
+	
 	// Ende Container
 	echo '</div>';
 	echo '</div>';
