@@ -4,11 +4,11 @@ A small and simple reader (PHP script) for showing [Authorea](http://authorea.co
 
 Demo: [live.offene-doktorarbeit.de](http://live.offene-doktorarbeit.de)
 
-Version: alpha 0.34
+Version: alpha 0.37
 
 # Installation Notes
-1. The folders "cache" and "data" need to be writable by the webserver 
-2. Add the URL to your dynamic BibTeX file at `$_GET[Q_FILE]="URL-HERE";` in includes/bibtexbrowser.php (line 3949) 
+1. The folders "cache" and "data" need to be writable by the webserver
+2. Add the URL to your dynamic BibTeX file at `$_GET[Q_FILE]="URL-HERE";` in includes/bibtexbrowser.php (line 3949)
 3. Edit the `General Settings` and `Settings for Import` section in the `index.php` file
 4. For Permalinks you need to create a .htaccess file in the root directory containing the following parameters:
 ```
