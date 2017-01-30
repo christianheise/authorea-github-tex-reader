@@ -19,4 +19,5 @@ RewriteRule ^uebersicht index.php
 RewriteRule ^literatur/all index.php?bibtex=all
 RewriteRule ^quelle/([^.]*)[/]?$ /includes/bibtexbrowser.php?key=$1&bib=ADD-URL-TO-BIBTEX-FILE-HERE
 ```
-5. For the initial use, you have to click through every chapter so all files are created initially
+
+For the initial use, you have to click through every chapter so all files are created initially
